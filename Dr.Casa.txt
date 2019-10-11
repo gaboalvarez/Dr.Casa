@@ -7,7 +7,19 @@ class Persona{
 	method celulas(){
 		return cant_celulas
 	}
-	
+
+	method cantCelulas(celulas){
+		cant_celulas = celulas
+	}
+
+	method temperatura(){
+		return temperatura
+	}
+
+	method cantTemperatura(temp){
+		temperatura = temp
+	}
+
 	method contraer(enfermedad){
 		if(enfermedades.size() < 5){
 			enfermedades.add(enfermedad)
@@ -143,5 +155,17 @@ class Enfermedad{
 >>>var lupus = new Enfermedad()
 >>>lupus.tipo("autoinmune")
 >>>lupus.amenazarCelulas(10000)
+
+>>> var logan = new Person()
+>>> logan.cantTemperatura(36)
+>>> logan.cantCelulas(3000000)
+>>> logan.contraer(malaria1)
+>>> logan.contraer(malaria2)
+>>> logan.contraer(otitis)
+
+>>> var frank = new Person()
+>>> frank.cantTemperatura(35)
+>>> frank.cantCelulas(3500000)
+>>> frank.contraer(lupus)
 
 */
