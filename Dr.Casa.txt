@@ -1,0 +1,147 @@
+class Persona{
+	var enfermedades = []
+	var cant_celulas = 1000
+	var temperatura = 36
+	var coma = false
+	
+	method celulas(){
+		return cant_celulas
+	}
+	
+	method contraer(enfermedad){
+		if(enfermedades.size() < 5){
+			enfermedades.add(enfermedad)
+		}
+	}
+	
+	method efecto(){
+		enfermedades.forEach({x => self.hacerEfecto(x)})
+	}
+
+	method coma(){
+		return coma
+	}
+	
+	method muerto(){
+		return (cant_celulas==0)
+	}
+		
+	method hacerEfecto(enfermedad){
+		if(self.muerto()){throw new Exception(message = "está muerto")}
+		if(!(self.muerto())){
+			if(enfermedad.es() == "infecciosa"){
+				self.aumentarTemperatura((enfermedad.celulas()))
+			}
+			if(enfermedad.es() == "autoinmune"){
+				self.destruirCelulas(enfermedad.celulas())
+			}
+			enfermedad.otroDia()
+		}
+	}
+	
+	method aumentarTemperatura(cant_aumentar){
+		var x = temperatura + ((cant_aumentar)/1000)
+		temperatura = self.minimo(45,x)
+		if(temperatura == 45){
+			coma = true
+		}else{
+			coma = false
+		}
+	}
+	
+	method destruirCelulas(cant_destruir){
+		var x =  cant_celulas - cant_destruir
+		cant_celulas = self.maximo(0,x)
+	}
+	
+	method minimo(x,y){
+		if(x<=y){
+			return x
+		}else{
+			return y
+		}
+	}
+	
+	method maximo(x,y){
+		if(x<=y){
+			return y
+		}else{
+			return x
+		}
+	}
+	
+}
+
+class Enfermedad{
+	var tipo
+	var celulasAmenazadas = 0
+	var dias = 0
+	method tipo(tipoEnfermedad){
+		tipo = tipoEnfermedad
+	}
+	method es(){
+		return tipo
+	}
+	method amenazarCelulas(cantCelulasAmenazadas){
+		celulasAmenazadas = cantCelulasAmenazadas
+	}
+	method celulas(){
+		return celulasAmenazadas
+	}
+	method reproducirse(){
+		if(tipo == "infecciosa"){
+			self.amenazarCelulas((self.celulas())*2)
+		}
+	}
+	method otroDia(){
+		dias += 1
+	}
+	method agresiva(persona){
+		if(tipo=="infecciosa"){
+			return (celulasAmenazadas > (0.1 * persona.celulas()))
+		}
+		else{
+			return (dias > 30)
+		}
+	}
+}
+
+/* EJEMPLOS =
+>>> var enf1 = new Enfermedad()
+>>> var enf2 = new Enfermedad()
+>>> enf1.tipo("autoinmune")
+>>> enf1.tipo("infecciosa")
+>>> enf2.tipo("autoinmune")
+>>> var yo = new Persona()
+>>> yo.contraer(enf1)
+>>> yo.contraer(enf2)
+>>> enf1.amenazarCelulas(100)
+>>> enf2.amenazarCelulas(100)
+>>> enf1.reproducirse()
+>>> enf1.reproducirse()
+>>> enf2.reproducirse()
+>>> yo.efecto()
+>>> yo.efecto()
+>>> yo.efecto()
+>>> yo.efecto()
+>>> yo.efecto()
+>>> enf1.agresiva(yo)
+>>> enf2.agresiva(yo)
+
+>>>var malaria1 = new Enfermedad()
+>>>malaria1.tipo("infecciosa")
+>>>malaria1.amenazarCelulas(500)
+
+>>>var malaria2 = new Enfermedad()
+>>>malaria1.tipo("infecciosa")
+>>>malaria1.amenazarCelulas(800)
+
+>>>var otitis = new Enfermedad()
+>>>otitis.tipo("autoinmune")
+>>>otitis.amenazarCelulas(100)
+
+>>>var lupus = new Enfermedad()
+>>>lupus.tipo("autoinmune")
+>>>lupus.amenazarCelulas(10000)
+
+*/
